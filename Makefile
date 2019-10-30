@@ -7,10 +7,10 @@ test.init:
 	TF_VAR_name=index.md terraform plan | \
 		parse-terraform-plan -o plan.json
 
-test.go:
+test.go: test.init
 	go test -v
 
-test.ruby:
+test.ruby: test.init
 	rspec --format doc
 
 clean:

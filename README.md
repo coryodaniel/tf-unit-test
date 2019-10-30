@@ -1,6 +1,8 @@
 # tf unit test
 
-Just an idea I was toying w/ once, dont use this.
+Just an idea I was toying w/ once, dont use this. Made w/ terraform 0.11.
+
+This probably doesnt work anymore.
 
 ## Setup
 
@@ -9,10 +11,7 @@ Just an idea I was toying w/ once, dont use this.
 ## Run a unit test
 
 ```shell
-TF_VAR_name=index.md terraform plan > plan.stdout
-parse-terraform-plan -i ./plan.stdout -o plan.json
-
-rspec --format doc
-rm plan.json
+make test.ruby # test a plan in ruby
+make test.go # test a plan in go
 ```
 
