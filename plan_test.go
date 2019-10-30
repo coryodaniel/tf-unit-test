@@ -16,6 +16,15 @@ func getChangedResourceByName(plan Plan, address string) (ChangedResource, error
 	return changedResource, errors.New("Not found")
 }
 
+func isDestroyed(resource ChangedResource) bool {
+	for _, a := range resource.Change.Actions {
+		if a == "delete" {
+			return true
+		}
+	}
+	return false
+}
+
 func TestPlan(t *testing.T) {
 	t.Run("generates a tmp file path", func(t *testing.T) {
 		plan := GetPlan()
@@ -27,6 +36,17 @@ func TestPlan(t *testing.T) {
 
 		if got != expected {
 			t.Errorf("got '%s' expected '%s'", got, expected)
+		}
+	})
+
+	t.Run("does not destroy foo", func(t *testing.T) {
+		plan := GetPlan()
+
+		resourceName := "module.mymod.local_file.foo"
+		resource, _ := getChangedResourceByName(plan, resourceName)
+
+		if isDestroyed(resource) {
+			t.Errorf("expected %s to not be destroyed", resourceName)
 		}
 	})
 }
