@@ -5,6 +5,30 @@ import "fmt"
 import "io/ioutil"
 import "os"
 
+type ChangedResource struct {
+	Address       string `json:"address"`
+	ModuleAddress string `json:"module_address"`
+	Mode          string `json:"mode"`
+	Type          string `json:"type"`
+	Name          string `json:"name"`
+	ProviderName  string `json:"provider_name"`
+	Change        struct {
+		Actions []string    `json:"actions"`
+		Before  interface{} `json:"before"`
+		After   struct {
+			Content             string      `json:"content"`
+			ContentBase64       interface{} `json:"content_base64"`
+			DirectoryPermission string      `json:"directory_permission"`
+			FilePermission      string      `json:"file_permission"`
+			Filename            string      `json:"filename"`
+			SensitiveContent    interface{} `json:"sensitive_content"`
+		} `json:"after"`
+		AfterUnknown struct {
+			ID bool `json:"id"`
+		} `json:"after_unknown"`
+	} `json:"change"`
+}
+
 type Plan struct {
 	FormatVersion    string `json:"format_version"`
 	TerraformVersion string `json:"terraform_version"`
@@ -42,30 +66,8 @@ type Plan struct {
 			} `json:"child_modules"`
 		} `json:"root_module"`
 	} `json:"planned_values"`
-	ResourceChanges []struct {
-		Address       string `json:"address"`
-		ModuleAddress string `json:"module_address"`
-		Mode          string `json:"mode"`
-		Type          string `json:"type"`
-		Name          string `json:"name"`
-		ProviderName  string `json:"provider_name"`
-		Change        struct {
-			Actions []string    `json:"actions"`
-			Before  interface{} `json:"before"`
-			After   struct {
-				Content             string      `json:"content"`
-				ContentBase64       interface{} `json:"content_base64"`
-				DirectoryPermission string      `json:"directory_permission"`
-				FilePermission      string      `json:"file_permission"`
-				Filename            string      `json:"filename"`
-				SensitiveContent    interface{} `json:"sensitive_content"`
-			} `json:"after"`
-			AfterUnknown struct {
-				ID bool `json:"id"`
-			} `json:"after_unknown"`
-		} `json:"change"`
-	} `json:"resource_changes"`
-	OutputChanges struct {
+	ResourceChanges []ChangedResource `json:"resource_changes"`
+	OutputChanges   struct {
 		File struct {
 			Actions      []string    `json:"actions"`
 			Before       interface{} `json:"before"`

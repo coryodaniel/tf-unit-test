@@ -1,14 +1,26 @@
 package main
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
+
+func getChangedResourceByName(plan Plan, address string) (ChangedResource, error) {
+	var changedResource ChangedResource
+	for _, resource := range plan.ResourceChanges {
+		if resource.Address == address {
+			return resource, nil
+		}
+	}
+
+	return changedResource, errors.New("Not found")
+}
 
 func TestPlan(t *testing.T) {
 	t.Run("generates a tmp file path", func(t *testing.T) {
 		plan := GetPlan()
 
-		// Weaksauce, should be a method for getting the resource by 'address'
-		// like the ruby example
-		resource := plan.ResourceChanges[0]
+		resource, _ := getChangedResourceByName(plan, "module.mymod.local_file.foo")
 
 		got := resource.Change.After.Filename
 		expected := "/tmp/index.md"
