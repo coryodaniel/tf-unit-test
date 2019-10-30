@@ -1,12 +1,6 @@
 # tf unit test
 
-Just an idea I was toying w/ once, dont use this. Made w/ terraform 0.11.
-
-This probably doesnt work anymore.
-
-## Setup
-
-`yarn add global terraform-plan-parser`
+Just an idea I was toying w/ once, dont use this.
 
 ## Run a unit test
 

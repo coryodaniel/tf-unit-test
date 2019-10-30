@@ -1,11 +1,11 @@
-.PHONY: test.ruby test.go test.init test
+.PHONY: clean test.ruby test.go test.init test
 
-test: test.init test.ruby test.go clean
+test: test.ruby test.go clean
 
-test.init:
+test.init: clean
 	terraform init
-	TF_VAR_name=index.md terraform plan | \
-		parse-terraform-plan -o plan.json
+	TF_VAR_name=index.md terraform plan -out tf.plan
+	terraform show -json tf.plan > tf.json
 
 test.go: test.init
 	go test -v
@@ -14,4 +14,5 @@ test.ruby: test.init
 	rspec --format doc
 
 clean:
-	rm plan.json
+	rm -f tf.plan
+	rm -f tf.json
